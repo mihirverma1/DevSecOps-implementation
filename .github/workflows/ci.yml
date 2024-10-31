@@ -37,7 +37,6 @@ jobs:
           -Dsonar.login=sqp_d7d0f6a83df71279a8a688da318cab7dfa67f717
 
     - name: Run OWASP ZAP security scan
-      uses: zaproxy/action-baseline@v0.0.12
+      uses: zaproxy/action-baseline@v0.13.0
       with:
         target: 'http://localhost:3000'
-        docker-image: 'owasp/zap2docker-stable'
