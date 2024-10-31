@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run tests (if any)
+      run: npm test || echo "No tests to run"
+
+    - name: Build Docker image
+      run: docker build . -t devsecops-project
+
+    - name: SonarQube Scan
+      uses: SonarSource/sonarcloud-github-action@master
+      with:
+        args: >
+          sonar-scanner
+          -Dsonar.projectKey=DevSecOps
+          -Dsonar.organization=bla
+          -Dsonar.host.url=http://localhost:9000
+          -Dsonar.login=sqp_d052f7c97e4c27172ce260558abe56454a843cba
+
+    - name: Run OWASP ZAP security scan
+      uses: zaproxy/action-baseline@v0.0.12
+      with:
+        target: 'http://localhost:3000'
+        docker-image: 'owasp/zap2docker-stable'
