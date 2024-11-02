@@ -21,6 +21,9 @@ jobs:
     - name: Install dependencies
       run: npm install
 
+    - name: Jest install
+      run: npm install --save-dev jest
+
     - name: Run tests (if any)
       run: npm test || echo "No tests to run"
 
@@ -38,5 +41,3 @@ jobs:
       uses: zaproxy/action-baseline@v0.13.0
       with:
         target: 'http://localhost:3000'  # URL of the service to scan
-        format: 'json'                   # Format of the report
-        output: 'zap_report.json' 

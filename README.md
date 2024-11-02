@@ -210,13 +210,13 @@ This is a learning module for docker and CI/CD pipelining with Docker and Git
 2. **Run Prometheus**:
    - You can run Prometheus in a Docker container:
    ```bash
-   docker run -d -p 9090:9090 -v $(pwd)/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
+   docker run -d -p 9090:9090 --network=monitoring-network -v /Path/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
    ```
 
 3. **Set Up Grafana**:
    - Run Grafana in a Docker container and configure it to use Prometheus as a data source.
    ```bash
-   docker run -d -p 3001:3000 grafana/grafana
+   docker run -d --network=monitoring-network -p 3001:3000 grafana/grafana
    ```
    - Access Grafana at `http://localhost:3001`, and add Prometheus as a data source.
 
@@ -227,8 +227,12 @@ This is a learning module for docker and CI/CD pipelining with Docker and Git
    - Add test scripts in your `package.json`:
    ```json
    "scripts": {
-     "test": "jest"
-   }
+    "test": "jest"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "verbose": true
+  }
    ```
 
 2. **Iterate Based on Feedback**:
