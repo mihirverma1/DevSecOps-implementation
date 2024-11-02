@@ -11,10 +11,10 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version: '16'
 
@@ -26,8 +26,17 @@ jobs:
 
     - name: Build Docker image
       run: docker build . -t devsecops-project
-      
-    - name: Run OWASP ZAP security scan
+# Step 4: Start the target service
+    - name: Start the target service
+      run: |
+        npm start &  # Start the service in the background
+# Step 5: Wait for the service to be fully initialized
+    - name: Wait for the service to start
+      run: sleep 15  # Adjust the sleep duration as needed
+    # Step 6: Run ZAP Baseline Scan
+    - name: Run ZAP Baseline Scan
       uses: zaproxy/action-baseline@v0.13.0
       with:
-        target: 'http://localhost:3000'
+        target: 'http://localhost:3000'  # URL of the service to scan
+        format: 'json'                   # Format of the report
+        output: 'zap_report.json' 
